@@ -1,0 +1,19 @@
+<div class="relative" data-controller="profile-menu">
+<span class="inline-block rounded-full overflow-hidden w-8 h-8">
+  <button class="w-full h-full rounded-full bg-cover bg-no-repeat bg-center cursor-pointer" data-action="click->profile-menu#toggleMenu">
+    <% unless helpers.current_user.nil? %>
+    <img src="https://gravatar.com/avatar/<%= Digest::SHA256.hexdigest helpers.current_user.email %>" alt="Profile picture"/>
+    <% else %>
+    <img src="https://gravatar.com/avatar/<%= Digest::SHA256.hexdigest "hello@email.com" %>" alt="Profile picture"/>
+    <% end %>
+  </button>
+</span>
+
+  <div class="fixed w-screen h-screen z-40 left-0 right-0" hidden data-profile-menu-target="menuBackground" data-action="click->profile-menu#toggleMenu"></div>
+
+  <div class="absolute right-0 z-50 min-w-[220px] bg-background rounded-md p-2 shadow-md overflow-y-auto border border-gray-200 mt-2 py-2 max-h-[calc(var(--radix-dropdown-menu-content-available-height)-1rem)] w-[280px]" hidden data-profile-menu-target="menu">
+    <%= form_with url: destroy_user_session_path, method: :delete, local: true do %>
+      <%= render ButtonComponent.new(color: 'red', ghost: true, text: "Log out", classes: "") %>
+    <% end %>
+  </div>
+</div>

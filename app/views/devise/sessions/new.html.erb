@@ -1,0 +1,36 @@
+<div class="flex items-center justify-center flex-col w-full h-screen">
+  <div class="flex items-center justify-center flex-col w-[378px]">
+    <div class="w-[48px] h-[48px]">
+      <%= render LogoComponent.new %>
+    </div>
+    <h2 class="text-[1.125rem] mt-4 mb-8">Welcome to Flexel</h2>
+
+    <% if alert %>
+      <div class="mb-3">
+      <%= render BannerComponent.new(variant: "danger", text: alert) %>
+      </div>
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'w-full flex flex-col gap-4' }) do |f| %>
+      <%= render InputComponent.new(name: "user[email]", label: "Email", type: "email", placeholder: "hello@email.com") %>
+
+      <%= render InputComponent.new(name: "user[password]", label: "Password", type: "password", placeholder: "********") %>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="field">
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me %>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <%#= f.submit "Log in" %>
+        <%= render ButtonComponent.new(color: "pink", text: "Log in", classes: "w-full", type: "submit") %>
+      </div>
+    <% end %>
+
+    <br />
+
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

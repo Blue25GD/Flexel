@@ -1,0 +1,43 @@
+<div class="w-full flex justify-center">
+  <div class="w-[1160px] mx-auto">
+    <div class="w-full h-[72px] flex items-center mb-16">
+      <div class="w-8 h-8 mr-auto">
+        <%= render LogoComponent.new %>
+      </div>
+      <%= render ProfileMenuComponent.new %>
+    </div>
+    <div class="flex justify-end">
+      <%= link_to "#" do %>
+        <%= render ButtonComponent.new(color: 'pink', text: "New project", classes: "ml-auto", type: "submit") %>
+      <% end %>
+    </div>
+
+    <hr class="w-full border-t border-gray-100 my-4">
+    <% unless current_user.projects.empty? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% current_user.projects.each do |project| %>
+          <div class="p-6 rounded-lg bg-secondaryBg dark:bg-gray-100 hover:bg-gray-100 dark:hover:bg-gray-200 relative h-full">
+            <%= link_to project, class: "focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 absolute inset-0" do %>
+              <span class="sr-only">View Project</span>
+            <% end %>
+            <div class="flex flex-col gap-2 h-full pointer-events-none relative z-10">
+              <div class="flex flex-col flex-grow">
+                <p class="font-medium mb-3"><%= project.name %></p>
+              </div>
+              <p class="text-sm text-gray-600">xxx service(s)</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <%= link_to "#", class: "focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 group relative flex flex-col md:flex-row items-center justify-center flex-grow border border-dashed border-gray-200 rounded-lg py-36 h-[444px] hover:border-pink-500" do %>
+        <%= image_tag "dashboard-empty-state-light.svg", style: "width: 136px; height: 136px;", class: "bg-background z-1 h-max" %>
+        <%= image_tag "dashboard-empty-state-circles-light.svg", class: "absolute left-0 top-0 bottom-0 hidden lg:block" %>
+        <div class="flex flex-col max-w-[380px] mt-8 md:mt-0 md:ml-8 text-center md:text-left">
+          <p class="text-h5 mb-2 text-gray-600 font-medium">Create a New Project</p>
+          <p class="text-sm mb-5 text-gray-400">Deploy a GitHub Repository, Provision a Database, or create an Empty
+            Project to start from local.</p></div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<% case @color %>
+<% when "red" %>
+  <button <% @options.each do |key, value| %> <%= "#{key}=\"#{value}\"" %> <% end %> class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 <%= @ghost ? 'bg-transparent text-red-500 hover:bg-red-100 hover:border-red-500' : 'bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600 disabled:bg-red-500 disabled:border-red-500' %> focus-visible:ring-red-600 h-[42px] py-2 px-3 rounded-md text-base leading-6 space-x-3 <%= @class %>">
+    <%= @text %>
+  </button>
+<% when "gray" %>
+  <button <% @options.each do |key, value| %> <%= "#{key}=\"#{value}\"" %> <% end %> class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 <%= @ghost ? 'bg-transparent text-gray-500 hover:bg-gray-100 hover:border-gray-500' : 'bg-gray-100 border-gray-200 text-foreground hover:bg-gray-200 hover:border-gray-300 disabled:bg-gray-100 disabled:border-gray-200' %> focus-visible:ring-gray-600 h-[42px] py-2 px-3 rounded-md text-base leading-6 space-x-3 <%= @class %>">
+    <%= @text %>
+  </button>
+<% when "pink" %>
+  <button <% @options.each do |key, value| %> <%= "#{key}=\"#{value}\"" %> <% end %> class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 <%= @ghost ? 'bg-transparent text-pink-500 hover:bg-pink-100 hover:border-pink-500' : 'bg-pink-500 border-pink-500 text-white hover:bg-pink-600 hover:border-pink-600 disabled:bg-pink-500 disabled:border-pink-500' %> focus-visible:ring-pink-600 h-[42px] py-2 px-3 rounded-md text-base leading-6 space-x-3 <%= @class %>">
+    <%= @text %>
+  </button>
+<% when "blue" %>
+  <button <% @options.each do |key, value| %> <%= "#{key}=\"#{value}\"" %> <% end %> class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 <%= @ghost ? 'bg-transparent text-blue-500 hover:bg-blue-100 hover:border-blue-500' : 'bg-blue-500 border-blue-500 text-white hover:bg-blue-600 hover:border-blue-600 disabled:bg-blue-500 disabled:border-blue-500' %> focus-visible:ring-blue-600 h-[42px] py-2 px-3 rounded-md text-base leading-6 space-x-3 <%= @class %>">
+    <%= @text %>
+  </button>
+<% when "green" %>
+  <button <% @options.each do |key, value| %> <%= "#{key}=\"#{value}\"" %> <% end %> class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 <%= @ghost ? 'bg-transparent text-green-500 hover:bg-green-100 hover:border-green-500' : 'bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600 disabled:bg-green-500 disabled:border-green-500' %> focus-visible:ring-green-600 h-[42px] py-2 px-3 rounded-md text-base leading-6 space-x-3 <%= @class %>">
+    <%= @text %>
+  </button>
+<% end %>
