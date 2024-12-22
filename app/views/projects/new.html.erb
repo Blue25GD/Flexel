@@ -1,0 +1,27 @@
+<%= render NavbarComponent.new %>
+<div class="w-full fixed z-10" style="height: calc(100% - 60px); background-image: url('<%= asset_path "grid-light.svg" %>'); background-repeat: repeat">
+</div>
+
+<div class="w-full z-20 relative justify-center flex">
+  <div class="flex flex-col items-center mt-16 short:mt-36 mb-4 max-w-[500px] w-full sm:mb-8 space-y-4 sm:space-y-8">
+    <div aria-hidden="true" class="text-current icon-container icon-2xl text-2xl">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M6 5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6Zm1 14V7h12v12H7ZM28 5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H28Zm1 14V7h12v12H29ZM5 28a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V28Zm2 1v12h12V29H7Zm29-1a1 1 0 1 0-2 0v6h-6a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6v-6Z" fill="url(#czsppitv6a)"></path>
+        <defs>
+          <linearGradient id="czsppitv6a" x1="5.76" y1="42.747" x2="43" y2="20.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#B814B8"></stop>
+            <stop offset="1" stop-color="#500CE4"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="flex flex-col items-center space-y-2 sm:space-y-4"><h1 class="text-large font-bold">New Project</h1>
+      <p class="text-base text-gray-600 text-center">Deploy your app to production effortlessly</p></div>
+    <div class="bg-background rounded-xl shadow-xl w-full p-4">
+      <%= form_with(url: projects_path, method: :post, class: "flex flex-col gap-3") do |f| %>
+        <%= render InputComponent.new(name: "project[name]", label: "Name", type: "text", placeholder: "", value: generate_project_name) %>
+        <%= render ButtonComponent.new(color: 'pink', text: "Create a new project", type: "submit") %>
+      <% end %>
+    </div>
+  </div>
+</div>

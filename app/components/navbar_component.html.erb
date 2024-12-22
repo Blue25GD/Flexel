@@ -1,1 +1,16 @@
-<div>Add Navbar template here</div>
+<div class="w-full h-[60px] bg-secondaryBg border-b border-gray-100 flex items-center px-4">
+  <%= link_to dashboard_path, class: "w-8 h-8" do %>
+    <%= render LogoComponent.new %>
+  <% end %>
+  <% if @project.nil? %>
+    <h1 class="mr-auto ml-3 text-lg font-semibold">New Project</h1>
+
+    <%= link_to "Dashboard", dashboard_path, class: "focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 text-sm text-gray-500 py-5 hover:text-foreground mr-4" %>
+  <% else %>
+<!--    <div class="ml-3">-->
+    <p class="text-base hidden md:block select-none mr-1 ml-4 text-gray-300 dark:text-gray-200" aria-hidden="true">/</p>
+    <span class="mr-auto ml-3 text-lg font-semibold"><%= @project.name %></span>
+<!--    </div>-->
+  <% end %>
+  <%= render ProfileMenuComponent.new %>
+</div>

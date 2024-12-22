@@ -13,9 +13,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  root "dashboard#index"
+  root "dashboard#index", as: "dashboard"
 
   get "design" => "design#index"
+
+  resources :projects
 
   if Rails.env.development?
     mount Lookbook::Engine, at: "/lookbook"
