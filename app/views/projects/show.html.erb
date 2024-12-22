@@ -1,34 +1,19 @@
 <%= render NavbarComponent.new(project: @project) %>
 
 <div class="w-full z-20 relative overflow-hidden" style="height: calc(100% - 60px)" id="viewport">
-  <div id="workspace" class="relative block">
-    <div class="react-flow__node react-flow__node-empty selectable" style="transform: translate(0px, 0px); pointer-events: all; visibility: visible;" data-id="empty" data-testid="rf__node-empty" tabindex="0" role="button" aria-describedby="react-flow__node-desc-1">
-      <button class="flex sm:hidden flex-col items-center justify-center w-full border border-dashed rounded-xl px-6 py-10 hover:border-pink-500">
-        <div class="icon-container icon-md text-2xl mb-4 flex items-center justify-center bg-pink-500 text-white p-1 rounded-full" aria-hidden="true">
+  <div id="workspace" class="relative flex">
+    <div id="center-point" class="bg-secondaryBg rounded-lg border border-dashed border-gray-300 hover:bg-gray-100 p-4">
+      <div class="flex space-x-3 items-start">
+        <div class="icon-container icon-md text-2xl mt-1 flex items-center justify-center bg-pink-500 text-white p-1 rounded-full" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
             <path d="M12 5v14m-7-7h14"></path>
           </svg>
         </div>
-        <p class="text-base">Add a New Service</p></button>
-      <div href="" target="_blank" rel="noreferrer" id="empty" as="div" class="focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 node flex-col justify-between pointer-events-auto relative cursor-pointer focus:!ring-0 -mx-5 px-5 py-4 border-y border-gray-100 dark:border-gray-100 hover:bg-secondaryBg hover:dark:bg-gray-100 sm:w-[288px] sm:h-[144px] sm:mx-0 sm:p-6 sm:shadow-sm sm:rounded-xl sm:border sm:translate-x-px sm:translate-y-px sm:relative sm:z-10 hover:sm:border-pink-200 hover:sm:bg-background hover:sm:shadow-[0px_0px_0px_4px_rgba(166,_103,_228,_0.06)] hover:sm:dark:shadow-none hover:sm:dark:border-gray-200 hover:sm:dark:bg-gray-100 hidden sm:flex border-dashed sm:border-gray-400 sm:dark:border-gray-300 bg-secondaryBg dark:bg-background shadow-none">
-        <div class="flex space-x-3 items-start">
-          <div class="icon-container icon-md text-2xl mt-1 flex items-center justify-center bg-pink-500 text-white p-1 rounded-full" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
-              <path d="M12 5v14m-7-7h14"></path>
-            </svg>
-          </div>
-          <div class="flex flex-col min-w-0">
-            <p class="text-base font-semibold truncate text-left mb-1 sm:mb-0">Add a Service</p>
-            <p class="text-sm">⌘K -&gt; New Service</p></div>
+        <div class="flex flex-col min-w-0">
+          <p class="text-base font-semibold truncate text-left mb-1 sm:mb-0">Add a Service</p>
+          <p class="mac-keyboard-shortcut text-sm">⌘K -&gt; New Service</p>
+          <p class="normal-keyboard-shortcut text-sm">Ctrl + K -&gt; New Service</p>
         </div>
-        <div class="flex space-x-4 items-center mt-3">
-          <div class="icon-container icon-md text-2xl text-gray-500" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 16v-4m0-4h.01"></path>
-            </svg>
-          </div>
-          <p class="text-sm text-gray-600">or top-right button is fine too.</p></div>
       </div>
     </div>
   </div>
@@ -43,116 +28,160 @@
 </style>
 
 <script>
-    let scale = 1;
-    const minScale = 0.5;
-    const maxScale = 3;
-    let translateX = 0;
-    let translateY = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let lastTouchDistance = 0;
+    (() => {
+        const isMac = navigator.platform.toUpperCase().includes('MAC');
 
-    const viewport = document.getElementById("viewport");
-    const workspace = document.getElementById("workspace");
+        const macShortcuts = document.querySelectorAll(".mac-keyboard-shortcut");
+        const normalShortcuts = document.querySelectorAll(".normal-keyboard-shortcut");
 
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-    const zoom = (delta, originX, originY) => {
-        const step = 1.05;
-        const oldScale = scale;
-        scale = clamp(delta > 0 ? scale / step : scale * step, minScale, maxScale);
-
-        const deltaX = (originX - translateX) * (1 - scale / oldScale);
-        const deltaY = (originY - translateY) * (1 - scale / oldScale);
-
-        translateX += deltaX;
-        translateY += deltaY;
-        updateTransform();
-    };
-
-    const pan = (dx, dy) => {
-        translateX += dx;
-        translateY += dy;
-        updateTransform();
-    };
-
-    const updateTransform = () => {
-        workspace.style.transformOrigin = "0 0";
-        workspace.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-        viewport.style.backgroundSize = `${30 * scale}px ${30 * scale}px`;
-        viewport.style.backgroundPosition = `${translateX}px ${translateY}px`;
-    };
-
-    viewport.addEventListener("wheel", (e) => {
-        e.preventDefault();
-        if (e.ctrlKey) {
-            zoom(e.deltaY, e.clientX, e.clientY - 60);
+        if (isMac) {
+            macShortcuts.forEach(shortcut => shortcut.style.display = "block");
+            normalShortcuts.forEach(shortcut => shortcut.style.display = "none");
         } else {
-            pan(-e.deltaX, -e.deltaY);
+            macShortcuts.forEach(shortcut => shortcut.style.display = "none");
+            normalShortcuts.forEach(shortcut => shortcut.style.display = "block");
         }
-    }, {passive: false});
 
-    viewport.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 2) {
-            lastTouchDistance = getTouchDistance(e.touches);
-        } else if (e.touches.length === 1) {
-            isDragging = true;
-            startX = e.touches[0].clientX - translateX;
-            startY = e.touches[0].clientY - translateY;
+        document.onkeydown = function (e) {
+            if ((isMac && e.metaKey && e.key === "k") || (!isMac && e.ctrlKey && e.key === "k")) {
+                e.preventDefault();
+                alert("New Service");
+            }
         }
-    });
 
-    viewport.addEventListener("touchmove", (e) => {
-        e.preventDefault();
-        if (e.touches.length === 2) {
-            const currentDistance = getTouchDistance(e.touches);
-            const delta = currentDistance - lastTouchDistance;
-            const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-            const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-            zoom(delta, centerX, centerY);
-            lastTouchDistance = currentDistance;
-        } else if (e.touches.length === 1 && isDragging) {
-            translateX = e.touches[0].clientX - startX;
-            translateY = e.touches[0].clientY - startY;
+        const viewport = document.getElementById("viewport");
+        const workspace = document.getElementById("workspace");
+        const centerPoint = document.getElementById("center-point");
+
+        let scale = 1;
+        const minScale = 0.5;
+        const maxScale = 3;
+        let translateX = (viewport.clientWidth / 2 - centerPoint.clientWidth / 2);
+        let translateY = (viewport.clientHeight / 2 - centerPoint.clientHeight / 2);
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let lastTouchDistance = 0;
+
+        let lastViewportWidth = viewport.clientWidth;
+        let lastViewportHeight = viewport.clientHeight;
+
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+        const zoom = (delta, originX, originY) => {
+            const step = 1.05;
+            const oldScale = scale;
+            scale = clamp(delta > 0 ? scale / step : scale * step, minScale, maxScale);
+
+            const deltaX = (originX - translateX) * (1 - scale / oldScale);
+            const deltaY = (originY - translateY) * (1 - scale / oldScale);
+
+            translateX += deltaX;
+            translateY += deltaY;
             updateTransform();
-        }
-    }, {passive: false});
+        };
 
-    viewport.addEventListener("touchend", () => {
-        isDragging = false;
-        lastTouchDistance = 0;
-    });
+        const pan = (dx, dy) => {
+            translateX += dx;
+            translateY += dy;
+            updateTransform();
+        };
 
-    viewport.addEventListener("mousedown", (e) => {
-        isDragging = true;
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        viewport.style.cursor = "grabbing";
-    });
+        const updateTransform = () => {
+            workspace.style.transformOrigin = "0 0";
+            workspace.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            viewport.style.backgroundSize = `${30 * scale}px ${30 * scale}px`;
+            viewport.style.backgroundPosition = `${translateX}px ${translateY}px`;
+        };
 
-    viewport.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-        translateX = e.clientX - startX;
-        translateY = e.clientY - startY;
+        const handleResize = () => {
+            const deltaWidth = viewport.clientWidth - lastViewportWidth;
+            const deltaHeight = viewport.clientHeight - lastViewportHeight;
+
+            translateX += deltaWidth / 2;
+            translateY += deltaHeight / 2;
+
+            lastViewportWidth = viewport.clientWidth;
+            lastViewportHeight = viewport.clientHeight;
+
+            updateTransform();
+        };
+
+        const stopDragging = () => {
+            if (isDragging) {
+                isDragging = false;
+                viewport.style.cursor = "grab";
+            }
+        };
+
         updateTransform();
-    });
 
-    viewport.addEventListener("mouseup", () => {
-        isDragging = false;
+        viewport.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            if (e.ctrlKey) {
+                zoom(e.deltaY, e.clientX, e.clientY - 60);
+            } else {
+                pan(-e.deltaX, -e.deltaY);
+            }
+        }, {passive: false});
+
+        viewport.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 2) {
+                lastTouchDistance = getTouchDistance(e.touches);
+            } else if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            }
+        });
+
+        viewport.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            if (e.touches.length === 2) {
+                const currentDistance = getTouchDistance(e.touches);
+                const delta = currentDistance - lastTouchDistance;
+                const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                zoom(delta, centerX, centerY);
+                lastTouchDistance = currentDistance;
+            } else if (e.touches.length === 1 && isDragging) {
+                translateX = e.touches[0].clientX - startX;
+                translateY = e.touches[0].clientY - startY;
+                updateTransform();
+            }
+        }, {passive: false});
+
+        viewport.addEventListener("touchend", stopDragging);
+
+        viewport.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            viewport.style.cursor = "grabbing";
+        });
+
+        viewport.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        });
+
+        viewport.addEventListener("mouseup", stopDragging);
+        viewport.addEventListener("mouseleave", stopDragging);
+
+        // Add global mouse up handler
+        window.addEventListener("mouseup", stopDragging);
+        window.addEventListener("blur", stopDragging);
+
+        window.addEventListener("resize", handleResize);
+
+        const getTouchDistance = (touches) => {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        };
+
         viewport.style.cursor = "grab";
-    });
-
-    viewport.addEventListener("mouseleave", () => {
-        isDragging = false;
-        viewport.style.cursor = "grab";
-    });
-
-    const getTouchDistance = (touches) => {
-        const dx = touches[0].clientX - touches[1].clientX;
-        const dy = touches[0].clientY - touches[1].clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-    };
-
-    viewport.style.cursor = "grab";
+    })();
 </script>
