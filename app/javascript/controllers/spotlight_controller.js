@@ -8,9 +8,12 @@ export default class extends Controller {
     channel = null
     response_ready = true
 
-    interval = null
+    hide(event) {
+        // if it's a keyboard event, we only want to hide if the key was escape
+        if (event instanceof KeyboardEvent && event.key !== "Escape") {
+            return
+        }
 
-    hide() {
         document.getElementById("spotlight").style.display = "none";
         this.requestRoot();
     }
