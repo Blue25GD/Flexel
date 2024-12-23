@@ -38,8 +38,6 @@ export default class extends Controller {
                 switch (data.type) {
                     case "documents":
                         // render the documents
-                        console.log("Received documents", values)
-
                         this.resultsTarget.innerHTML = ""
 
                         for (const value of values) {
