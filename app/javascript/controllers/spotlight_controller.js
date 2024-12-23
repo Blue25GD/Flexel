@@ -3,7 +3,7 @@ import consumer from "channels/consumer"
 
 // Connects to data-controller="spotlight"
 export default class extends Controller {
-    static targets = ["documentTemplate", "results"]
+    static targets = ["documentTemplate", "results", "notFound"]
 
     channel = null
     response_ready = true
@@ -20,6 +20,17 @@ export default class extends Controller {
 
     requestRoot() {
         this.channel.perform('request_documents', {parent_id: null})
+        this.response_ready = false
+    }
+
+    search(event) {
+        const query = event.target.value
+        if (query.length === 0) {
+            this.requestRoot()
+            return
+        }
+
+        this.channel.perform('search_documents', {query: query})
         this.response_ready = false
     }
 
@@ -43,10 +54,25 @@ export default class extends Controller {
                         // render the documents
                         this.resultsTarget.innerHTML = ""
 
+                        // if there are no documents, show the not found message
+                        if (values.length === 0) {
+                            let clone = this.notFoundTarget.cloneNode(true)
+                            clone.style.display = "flex"
+                            this.resultsTarget.appendChild(clone)
+                            return
+                        }
+
                         for (const value of values) {
                             const document = this.documentTemplateTarget.cloneNode(true)
                             document.querySelector("span").textContent = value.title
-                            document.querySelector(".icon-container").hidden = !value.has_children
+                            document.querySelector(".arrow-icon-container").hidden = !value.has_children
+                            console.log(value.icon)
+                            if (value.icon) {
+                                console.log(document.querySelector(".icon-container .icon"))
+                                document.querySelector(".icon-container .icon").src = value.icon
+                            } else {
+                                document.querySelector(".icon-container .icon").style.display = "none"
+                            }
 
                             document.style.display = "flex"
 
