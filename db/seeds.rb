@@ -10,4 +10,6 @@
 
 # add the spotlight_documents
 
-SpotlightDocument.create!(title: "Empty project", icon: "empty-project.svg")
+new_service = SpotlightDocument.new(title: "New Service", icon: "plus.svg")
+new_service.save!
+SpotlightDocument.create!(title: "Empty project", icon: "empty-project.svg", parent: new_service)
