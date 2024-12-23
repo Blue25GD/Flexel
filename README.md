@@ -1,24 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Deployment
 
-Things you may want to cover:
+### Requirements:
+- An ubuntu server with root access and curl installed.
+- A domain name proxied through cloudflare or an ssl proxy with your domain name.
 
-* Ruby version
+### Instructions:
 
-* System dependencies
+Deployment is as simple as running the following command on your server:
 
-* Configuration
+```shell
+curl -sL https://raw.githubusercontent.com/Blue25GD/Flexel/refs/heads/main/deploy.sh | bash
+```
 
-* Database creation
+### Accessing the service:
 
-* Database initialization
+Once the deployment is complete, you can access the service by visiting your domain name in a web browser.
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The deployment script automatically starts the web server on port 80 and your proxy needs to be configured to forward traffic to the server. **It will not work without SSL**

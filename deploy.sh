@@ -15,4 +15,4 @@ rm config/master.key
 
 docker build -t flexel .
 
-docker run -d -p 80:80 flexel
+docker run -d -p 80:3000 flexel
