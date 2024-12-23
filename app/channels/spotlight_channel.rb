@@ -53,4 +53,41 @@ class SpotlightChannel < ApplicationCable::Channel
       }
     )
   end
+
+  def execute_document(data)
+    document = SpotlightDocument.find(data["id"])
+
+    project = Project.find(data["project_id"])
+
+    if project.user != current_user
+      return
+    end
+
+    # parse the action (JSON)
+    if document.action.nil?
+      return
+    end
+    action = JSON.parse(document.action)
+
+    case action["type"]
+    when "new_empty_service"
+      service = Service.create!(name: Project.generate_project_name, project: project)
+
+      ServicesChannel.broadcast_to(
+        current_user,
+        data: {
+          type: "services",
+          values: [service]
+        }
+      )
+    end
+
+    SpotlightChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "execute",
+        value: document.action
+      }
+    )
+  end
 end

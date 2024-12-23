@@ -12,4 +12,5 @@
 
 new_service = SpotlightDocument.new(title: "New Service", icon: "plus.svg")
 new_service.save!
-SpotlightDocument.create!(title: "Empty project", icon: "empty-project.svg", parent: new_service)
+SpotlightDocument.create!(title: "Docker Image", icon: "cube.svg", parent: new_service)
+SpotlightDocument.create!(title: "Empty Service", icon: "empty-project.svg", parent: new_service, action: '{"type":"new_empty_service"}')

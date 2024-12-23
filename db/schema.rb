@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_23_094414) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_23_140944) do
   create_table "projects", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_projects_on_user_id"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_services_on_project_id"
   end
 
   create_table "spotlight_documents", force: :cascade do |t|
@@ -41,5 +49,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_094414) do
   end
 
   add_foreign_key "projects", "users"
+  add_foreign_key "services", "projects"
   add_foreign_key "spotlight_documents", "spotlight_documents", column: "parent_id"
 end

@@ -66,9 +66,7 @@ export default class extends Controller {
                             const document = this.documentTemplateTarget.cloneNode(true)
                             document.querySelector("span").textContent = value.title
                             document.querySelector(".arrow-icon-container").hidden = !value.has_children
-                            console.log(value.icon)
                             if (value.icon) {
-                                console.log(document.querySelector(".icon-container .icon"))
                                 document.querySelector(".icon-container .icon").src = value.icon
                             } else {
                                 document.querySelector(".icon-container .icon").style.display = "none"
@@ -82,11 +80,21 @@ export default class extends Controller {
                                     this.channel.perform("request_documents", {parent_id: value.id})
                                     this.response_ready = false
                                 })
+                            } else {
+                                document.addEventListener("click", (event) => {
+                                    let project_id = window.location.pathname.split("/")[2]
+
+                                    this.channel.perform("execute_document", {id: value.id, project_id: project_id})
+                                })
                             }
 
                             this.resultsTarget.appendChild(document)
                         }
 
+                        break
+                    case "execute":
+                        // close spotlight
+                        this.hide(null)
                         break
                 }
             }
