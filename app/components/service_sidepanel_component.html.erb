@@ -1,0 +1,27 @@
+<div class="absolute right-0 bottom-0 top-[68px] h-[calc(100% - 68px)] z-10 w-[1000px] bg-white border rounded-tl-lg panel" id="service-sidepanel" style="display: none">
+  <div class="flex flex-col pt-8 md:px-12 md:pt-12 z-50 border-b !border-gray-100 md:!border-gray-200">
+    <button class="text-h2 font-semibold focus:outline-none flex items-center rounded-md outline-none hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-gray-300 group">
+      service-name
+    </button>
+  </div>
+</div>
+
+<script>
+    (() => {
+        const elementToBlockBubbling = document.getElementsByClassName('panel')[0];
+
+        const events = [
+            'click', 'mouseover', 'mousedown', 'mouseup', 'keydown', 'keyup',
+            'mouseenter', 'mouseleave', 'focus', 'blur',
+            'touchstart', 'touchend', 'touchmove', 'touchcancel',
+            'pointerdown', 'pointerup', 'pointermove', 'wheel' // Added pointer and wheel events
+        ];
+
+        // Add event listeners to stop propagation for each event
+        events.forEach(eventType => {
+            elementToBlockBubbling.addEventListener(eventType, function(event) {
+                event.stopPropagation();
+            }, { passive: false });  // Use passive: false for touch events
+        });
+    })()
+</script>
