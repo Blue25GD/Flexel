@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class InputComponentPreview < ViewComponent::Preview
   # Preview: Only name and label
   def name_and_label

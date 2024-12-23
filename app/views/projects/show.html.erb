@@ -2,7 +2,7 @@
 
 <div class="w-full z-20 relative overflow-hidden" style="height: calc(100% - 60px)" id="viewport">
   <div id="workspace" class="relative flex">
-    <div id="center-point" class="bg-secondaryBg rounded-lg border border-dashed border-gray-300 hover:bg-gray-100 p-4">
+    <div id="center-point" onclick="" class="add-service cursor-pointer bg-secondaryBg rounded-lg border border-dashed border-gray-300 hover:bg-gray-100 p-4">
       <div class="flex space-x-3 items-start">
         <div class="icon-container icon-md text-2xl mt-1 flex items-center justify-center bg-pink-500 text-white p-1 rounded-full" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
@@ -18,6 +18,8 @@
     </div>
   </div>
 </div>
+
+<%= render SpotlightComponent.new %>
 
 <style>
     #viewport {
@@ -42,12 +44,19 @@
             normalShortcuts.forEach(shortcut => shortcut.style.display = "block");
         }
 
+        function handleSpotlight() {
+            document.getElementById("spotlight").style.display = "flex";
+            document.getElementById("spotlight-search").focus();
+        }
+
         document.onkeydown = function (e) {
             if ((isMac && e.metaKey && e.key === "k") || (!isMac && e.ctrlKey && e.key === "k")) {
                 e.preventDefault();
-                alert("New Service");
+                handleSpotlight();
             }
         }
+
+        document.getElementsByClassName("add-service")[0].addEventListener("click", handleSpotlight);
 
         const viewport = document.getElementById("viewport");
         const workspace = document.getElementById("workspace");
