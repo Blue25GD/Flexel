@@ -71,13 +71,22 @@ class SpotlightChannel < ApplicationCable::Channel
 
     case action["type"]
     when "new_empty_service"
-      service = Service.create!(name: Project.generate_project_name, project: project)
+      Service.create!(name: Project.generate_project_name, project: project)
+      # broadcast the new service
+      services = Service.where(project_id: data["project_id"])
+
+      services = services.map do |service|
+        {
+          id: service.id,
+          name: service.name
+        }
+      end
 
       ServicesChannel.broadcast_to(
         current_user,
         data: {
           type: "services",
-          values: [service]
+          values: services
         }
       )
     end

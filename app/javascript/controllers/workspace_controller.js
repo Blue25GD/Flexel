@@ -43,70 +43,79 @@ export default class extends Controller {
                 // Called when there's incoming data on the websocket for this channel
                 data = data.data
                 const values = data.values
-              switch (data.type) {
-                case "services":
-                  if (values.length === 0) {
-                    return
-                  }
-                  // get rid of the "add service" button
-                  document.getElementsByClassName("add-service")[0].style.display = "none"
-                  document.getElementsByClassName("add-service")[0].id = ""
+                switch (data.type) {
+                    case "services":
+                        if (values.length === 0) {
+                            return
+                        }
+                        // get rid of the "add service" button
+                        document.getElementsByClassName("add-service")[0].style.display = "none"
+                        document.getElementsByClassName("add-service")[0].id = ""
 
-                  const template = document.getElementById("service-template");
+                        // get rid of all the services
+                        const services = document.querySelectorAll("#workspace .service")
+                        for (let i = 0; i < services.length; i++) {
+                            if (services[i].id === "service-template") {
+                                continue
+                            }
+                            services[i].remove()
+                        }
 
-                  let totalServices = values.length;
-                  let centerService = Math.floor(totalServices / 2);
+                        const template = document.getElementById("service-template");
 
-                  for (let i = 0; i < totalServices; i++) {
-                    const service = values[i];
-                    const clone = template.cloneNode(true);
-                    clone.querySelector(".service-name").textContent = service.name;
+                        let totalServices = values.length;
+                        let centerService = Math.floor(totalServices / 2);
 
-                    clone.style.display = "flex";
-                    clone.id = "";
+                        for (let i = 0; i < totalServices; i++) {
+                            const service = values[i];
+                            const clone = template.cloneNode(true);
+                            clone.querySelector(".service-name").textContent = service.name;
 
-                    // Add spacing between the services
-                    clone.style.margin = "10px";  // Adjust margin as needed
+                            clone.style.display = "flex";
+                            clone.id = "";
 
-                    if (i === centerService) {
-                      clone.id = "center-point";
-                    }
+                            // Add spacing between the services
+                            clone.style.margin = "10px";  // Adjust margin as needed
 
-                    const workspace = document.getElementById("workspace");
-                    workspace.appendChild(clone);
-                  }
+                            if (i === centerService) {
+                                clone.id = "center-point";
+                            }
 
-                  this.updateInitialPosition()
-              }
+                            const workspace = document.getElementById("workspace");
+                            workspace.appendChild(clone);
+                        }
+
+                        this.updateInitialPosition()
+                }
 
             }
         });
 
     }
 
-  updateInitialPosition() {
-    const centerPoint = document.getElementById("center-point");
-    const viewportWidth = this.viewportTarget.clientWidth;
-    const viewportHeight = this.viewportTarget.clientHeight;
+    updateInitialPosition() {
+        const centerPoint = document.getElementById("center-point");
+        const viewportWidth = this.viewportTarget.clientWidth;
+        const viewportHeight = this.viewportTarget.clientHeight;
 
-    // Get the center point's position in the viewport
-    const rect = centerPoint.getBoundingClientRect();
-    const elementWidth = rect.width;
-    const elementHeight = rect.height;
+        // Get the center point's position in the viewport
+        const rect = centerPoint.getBoundingClientRect();
+        const elementWidth = rect.width;
+        const elementHeight = rect.height;
 
-    // Get the current center point's x and y coordinates (its center relative to the viewport)
-    const centerX = centerPoint.offsetLeft + elementWidth / 2;
-    const centerY = centerPoint.offsetTop + elementHeight / 2;
+        // Get the current center point's x and y coordinates (its center relative to the viewport)
+        const centerX = centerPoint.offsetLeft + elementWidth / 2;
+        const centerY = centerPoint.offsetTop + elementHeight / 2;
 
-    // Calculate the translation needed to center the element
-    this.translateX = (viewportWidth / 2) - centerX;
-    this.translateY = (viewportHeight / 2) - centerY;
+        // Calculate the translation needed to center the element
+        this.translateX = (viewportWidth / 2) - centerX;
+        this.translateY = (viewportHeight / 2) - centerY;
 
-    // Apply the calculated translation to the element
-    this.updateTransform();
-  }
+        // Apply the calculated translation to the element
+        this.updateTransform();
+    }
 
-  toggleShortcuts() {
+    toggleShortcuts() {
         const displayMac = this.isMac ? "block" : "none";
         const displayNormal = this.isMac ? "none" : "block";
 
@@ -247,5 +256,9 @@ export default class extends Controller {
         this.workspaceTarget.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
         this.viewportTarget.style.backgroundSize = `${30 * this.scale}px ${30 * this.scale}px`;
         this.viewportTarget.style.backgroundPosition = `${this.translateX}px ${this.translateY}px`;
+    }
+
+    disconnect() {
+        this.channel.unsubscribe()
     }
 }

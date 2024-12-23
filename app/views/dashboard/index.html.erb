@@ -38,7 +38,7 @@
               <div class="flex flex-col flex-grow">
                 <p class="font-medium mb-3"><%= project.name %></p>
               </div>
-              <p class="text-sm text-gray-600">xxx service(s)</p>
+              <p class="text-sm text-gray-600"><%= project.services.count %> service<%= project.services.count > 1 || project.services.count == 0 ? 's' : '' %></p>
             </div>
           </div>
         <% end %>
