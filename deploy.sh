@@ -6,7 +6,9 @@ apt-get install curl git -y
 git clone https://github.com/Blue25GD/Flexel.git ~/Flexel
 cd ~/Flexel
 
-curl https://get.docker.io | bash
+curl https://get.docker.com > install.sh
+sh install.sh
+rm install.sh
 
 rm config/credentials.yml.enc
 rm config/master.key
