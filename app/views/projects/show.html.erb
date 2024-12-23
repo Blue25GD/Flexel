@@ -7,6 +7,11 @@
   data-controller="workspace"
   data-workspace-target="viewport"
 >
+  <button
+    class="z-10 absolute right-4 top-4 flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 border-gray-200 text-foreground disabled:bg-gray-100 disabled:border-gray-200 focus-visible:ring-gray-600 h-[34px] py-1.5 px-3 rounded-md text-sm leading-5 space-x-2 bg-secondaryBg dark:bg-gray-100 hover:bg-gray-100 hover:border-gray-200 dark:hover:bg-gray-200"
+    data-action="click->workspace#handleSpotlight">
+    Create
+  </button>
   <div id="workspace" class="relative flex" data-workspace-target="workspace">
     <div id="service-template" class="service focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 node flex flex-col justify-between pointer-events-auto relative bg-background cursor-pointer dark:bg-secondaryBg focus:!ring-0 -mx-5 px-5 py-4 border-y border-gray-100 dark:border-gray-100 hover:bg-secondaryBg hover:dark:bg-gray-100 sm:w-[288px] sm:h-[144px] sm:mx-0 sm:p-6 sm:shadow-sm sm:rounded-xl sm:border sm:border-gray-200 sm:dark:border-gray-200 sm:translate-x-px sm:translate-y-px sm:relative sm:z-10 hover:sm:border-pink-200 hover:sm:bg-background hover:sm:shadow-[0px_0px_0px_4px_rgba(166,_103,_228,_0.06)] hover:sm:dark:shadow-none hover:sm:dark:border-gray-200 hover:sm:dark:bg-gray-100 group" style="display: none">
       <div class="flex space-x-3 items-center">
@@ -22,7 +27,7 @@
     </div>
     <div
       id="center-point"
-      class="add-service cursor-pointer bg-secondaryBg rounded-lg border border-dashed border-gray-300 hover:bg-gray-100 p-4"
+      class="add-service cursor-pointer bg-secondaryBg rounded-lg border border-dashed border-gray-300 hover:bg-gray-100 p-6"
       data-action="click->workspace#handleSpotlight"
       data-workspace-target="addService"
     >
@@ -57,6 +62,15 @@
           </p>
         </div>
       </div>
+
+      <div class="flex space-x-4 items-center mt-3">
+        <div class="icon-container icon-md text-2xl text-gray-500" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4m0-4h.01"></path>
+          </svg>
+        </div>
+        <p class="text-sm text-gray-600">or top-right button is fine too.</p></div>
     </div>
   </div>
 </div>
