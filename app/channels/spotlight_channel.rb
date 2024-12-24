@@ -71,7 +71,18 @@ class SpotlightChannel < ApplicationCable::Channel
 
     case action["type"]
     when "new_empty_service"
-      Service.create!(name: Project.generate_project_name, project: project)
+      ActivityLogChannel.broadcast_to(
+        current_user,
+        data: {
+          type: "toast",
+          values: {
+            type: "neutral",
+            message: "Creating service..."
+          }
+        }
+      )
+
+      service = Service.create!(name: Project.generate_project_name, project: project)
       # broadcast the new service
       services = Service.where(project_id: data["project_id"])
 
@@ -87,6 +98,17 @@ class SpotlightChannel < ApplicationCable::Channel
         data: {
           type: "services",
           values: services
+        }
+      )
+
+      ActivityLogChannel.broadcast_to(
+        current_user,
+        data: {
+          type: "toast",
+          values: {
+            type: "success",
+            message: "Service #{service.name} created"
+          }
         }
       )
     end

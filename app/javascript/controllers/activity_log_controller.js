@@ -1,5 +1,6 @@
 import {Controller} from "@hotwired/stimulus"
 import {block_bubbling_for_elements} from "application";
+import consumer from "channels/consumer"
 
 // Connects to data-controller="activity-log"
 export default class extends Controller {
@@ -7,10 +8,33 @@ export default class extends Controller {
 
     isOpen = false
 
+    channel = null
+
     connect() {
         const elementsToBlockBubbling = document.querySelectorAll('#activity-log *');
 
         block_bubbling_for_elements(elementsToBlockBubbling);
+
+        this.channel = consumer.subscriptions.create("ActivityLogChannel", {
+            connected() {
+                // Called when the subscription is ready for use on the server
+            },
+
+            disconnected() {
+                // Called when the subscription has been terminated by the server
+            },
+
+            received: (data) => {
+                // Called when there's incoming data on the websocket for this channel
+                data = data.data;
+                const values = data.values;
+                switch (data.type) {
+                    case "toast":
+                        this.addToast(values["message"], values["type"]);
+                        break;
+                }
+            }
+        });
     }
 
     toggleActivityLog(event) {

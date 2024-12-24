@@ -64,6 +64,17 @@ class ServiceSidepanelChannel < ApplicationCable::Channel
         values: services
       }
     )
+
+    ActivityLogChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "toast",
+        values: {
+          type: "success",
+          message: "Service #{service.name} deleted"
+        }
+      }
+    )
   end
 
   def update_service_name(params)
@@ -102,6 +113,17 @@ class ServiceSidepanelChannel < ApplicationCable::Channel
       data: {
         type: "services",
         values: services
+      }
+    )
+
+    ActivityLogChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "toast",
+        values: {
+          type: "success",
+          message: "Service #{service.name} updated"
+        }
       }
     )
   end
