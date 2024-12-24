@@ -1,0 +1,115 @@
+<div data-controller="activity-log" class="bottom-0 right-6 absolute" id="activity-log">
+  <div class="h-full grid grid-rows-[auto_minmax(0px,_1fr)] rounded-t-lg border-t border-l border-r border-gray-200 overflow-hidden pointer-events-auto bg-background dark:bg-secondaryBg w-full w-[318px] cursor-default z-20">
+    <button class="flex items-center py-2 px-4 w-full text-left" name="Activity Feed" data-action="click->activity-log#toggleActivityLog">
+      <div class="icon-container icon-md text-2xl text-pink-500" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+      </div>
+      <p class="text-base ml-2">Activity</p>
+      <div class="text-current icon-container icon-md text-2xl ml-auto" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up">
+          <path d="m18 15-6-6-6 6"></path>
+        </svg>
+      </div>
+    </button>
+    <div class="w-full bg-white flex" data-activity-log-target="content" style="display: none">
+      <div class="border-t border-gray-100 w-full">
+        <ul class="overflow-y-scroll h-full p-2 flex flex-col gap-1 w-full">
+          Toast notification test buttons.
+          <button data-action="click->activity-log#testNeutralToast">Test neutral toast</button>
+          <button data-action="click->activity-log#testSuccessToast">Test success toast</button>
+          <button data-action="click->activity-log#testErrorToast">Test error toast</button>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts bottom-16 right-0 absolute gap-6 flex flex-col" data-activity-log-target="toasts">
+    <div class="toast relative z-30 cursor-default" style="opacity: 1; transform: none; display: none" data-activity-log-target="neutralToastTemplate">
+      <div class="border rounded-lg shadow-[0px_2px_12px_rgba(0,_0,_0,_0.04)] p-4 max-w-[320px] md:w-80 bg-background dark:bg-gray-100 border-gray-200">
+        <div class="flex space-x-2 justify-between">
+          <div class="flex space-x-4 items-start w-full">
+            <div class="icon-container icon-md text-2xl text-gray-500 mt-0.5" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="flex flex-col space-y-2 w-full">
+              <div class="flex justify-between items-center w-full">
+                <p class="text-base font-medium toast-message">Choo Choo 3!</p>
+                <button class="group/button flex items-center justify-center
+                 border transform transition-transform duration-50 active:scale-95
+                  focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed
+                   disabled:opacity-50 bg-transparent border-transparent text-foreground
+                    hover:bg-gray-100 hover:border-gray-100 disabled:bg-transparent
+                     disabled:border-transparent focus-visible:ring-gray-600
+                      focus-visible:bg-gray-100 h-[34px] py-1.5 rounded-md text-sm leading-5
+                       space-x-2 w-[34px] px-0 opacity-40 !w-5 !h-5" title="Dismiss" data-action="click->activity-log#dismissToast">
+                  <div class="icon-container icon-md text-2xl !w-4 !h-4 text-foreground" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                      <path d="M18 6 6 18M6 6l12 12"></path>
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast relative z-30 cursor-default" style="opacity: 1; transform: none; display: none" data-activity-log-target="successToastTemplate">
+      <div class="border rounded-lg shadow-[0px_2px_12px_rgba(0,_0,_0,_0.04)] p-4 max-w-[320px] md:w-80 bg-background dark:bg-gray-100 border-green-200">
+        <div class="flex space-x-2 justify-between">
+          <div class="flex space-x-4 items-start w-full">
+            <div class="icon-container icon-md text-2xl text-green-500 mt-0.5" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <path d="M22 4 12 14.01l-3-3"></path>
+              </svg>
+            </div>
+            <div class="flex flex-col space-y-2 w-full">
+              <div class="flex justify-between items-center w-full">
+                <p class="text-base font-medium toast-message">Something went right</p>
+                <button data-action="click->activity-log#dismissToast" class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 bg-transparent border-transparent text-foreground hover:bg-gray-100 hover:border-gray-100 disabled:bg-transparent disabled:border-transparent focus-visible:ring-gray-600 focus-visible:bg-gray-100 h-[34px] py-1.5 rounded-md text-sm leading-5 space-x-2 w-[34px] px-0 opacity-40 !w-5 !h-5" title="Dismiss" data-testid="dismiss-toast">
+                  <div class="icon-container icon-md text-2xl !w-4 !h-4 text-foreground" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                      <path d="M18 6 6 18M6 6l12 12"></path>
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative toast z-30 cursor-default" style="opacity: 1; transform: none; display: none" data-activity-log-target="errorToastTemplate">
+      <div class="border rounded-lg shadow-[0px_2px_12px_rgba(0,_0,_0,_0.04)] p-4 max-w-[320px] md:w-80 bg-background dark:bg-gray-100 border-red-200">
+        <div class="flex space-x-2 justify-between">
+          <div class="flex space-x-4 items-start w-full">
+            <div class="icon-container icon-md text-2xl text-red-500 mt-0.5" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"></path>
+              </svg>
+            </div>
+            <div class="flex flex-col space-y-2 w-full">
+              <div class="flex justify-between items-center w-full">
+                <p class="text-base font-medium toast-message">Oh no. Something went wrong</p>
+                <a href="" target="_blank" rel="noreferrer" class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 bg-transparent border-transparent text-foreground hover:bg-gray-100 hover:border-gray-100 disabled:bg-transparent disabled:border-transparent focus-visible:ring-gray-600 focus-visible:bg-gray-100 h-[34px] py-1.5 rounded-md text-sm leading-5 space-x-2 w-[34px] px-0 opacity-40 !w-5 !h-5" title="Dismiss" data-testid="dismiss-toast">
+                  <div class="icon-container icon-md text-2xl !w-4 !h-4 text-foreground" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                      <path d="M18 6 6 18M6 6l12 12"></path>
+                    </svg>
+                  </div>
+                </a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
