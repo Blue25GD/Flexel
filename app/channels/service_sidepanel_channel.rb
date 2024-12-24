@@ -48,22 +48,7 @@ class ServiceSidepanelChannel < ApplicationCable::Channel
       }
     )
 
-    services = Service.where(project_id: project.id)
-
-    services = services.map do |current_service|
-      {
-        id: current_service.id,
-        name: current_service.name
-      }
-    end
-
-    ServicesChannel.broadcast_to(
-      current_user,
-      data: {
-        type: "services",
-        values: services
-      }
-    )
+    ServicesChannel.broadcast_services(project.id, current_user)
 
     ActivityLogChannel.broadcast_to(
       current_user,
@@ -99,22 +84,7 @@ class ServiceSidepanelChannel < ApplicationCable::Channel
       }
     )
 
-    services = Service.where(project_id: project.id)
-
-    services = services.map do |current_service|
-      {
-        id: current_service.id,
-        name: current_service.name
-      }
-    end
-
-    ServicesChannel.broadcast_to(
-      current_user,
-      data: {
-        type: "services",
-        values: services
-      }
-    )
+    ServicesChannel.broadcast_services(project.id, current_user)
 
     ActivityLogChannel.broadcast_to(
       current_user,
@@ -123,6 +93,35 @@ class ServiceSidepanelChannel < ApplicationCable::Channel
         values: {
           type: "success",
           message: "Service #{service.name} updated"
+        }
+      }
+    )
+
+    ActivityLogChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "changes",
+        values: {
+          can_deploy: true
+        }
+      }
+    )
+  end
+
+  def connect_image(params)
+    # set the service's source_url to the image + source_type to docker_image
+    service = Service.find(params["service_id"])
+
+    service.source_url = params["image_name"]
+    service.source_type = "docker_image"
+    service.save!
+
+    ActivityLogChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "changes",
+        values: {
+          can_deploy: true
         }
       }
     )

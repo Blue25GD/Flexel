@@ -1,4 +1,19 @@
 <div data-controller="activity-log" class="bottom-0 right-6 absolute" id="activity-log">
+  <div class="fixed top-[84px] left-1/2 z-[15]" style="transform: translateX(-50%); display: none" data-activity-log-target="applyChangesBanner">
+    <div class="flex justify-between min-h-[52px] gap-4 border border-pink-200 bg-[#FAF6FD] dark:bg-[#130b19] rounded-md z-20 flex-col px-4 py-4 md:flex-row lg:flex-col xl:px-4 xl:py-2 xl:flex-row xl:min-w-[420px]" style="box-shadow: rgba(110, 34, 218, 0.07) 0px 5.254px 5.254px 0px, rgba(110, 34, 218, 0.04) 0px 17.646px 17.646px 0px, rgba(110, 34, 218, 0.03) 0px 79px 79px 0px; transform: none;">
+      <div class="flex items-center gap-3"><p class="text-sm font-medium text-pink-600">Apply changes</p></div>
+      <div class="flex space-x-2">
+        <button class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 bg-pink-500 border-pink-500 text-white hover:bg-pink-600 hover:border-pink-600 disabled:bg-pink-500 disabled:border-pink-500 focus-visible:ring-pink-600 h-[34px] py-1.5 px-3 rounded-md text-sm leading-5 space-x-2">
+          Deploy
+        </button>
+        <button class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 border-pink-500 text-pink-500 hover:bg-pink-100 hover:border-pink-600 disabled:bg-pink-500 disabled:border-pink-500 focus-visible:ring-pink-600 h-[34px] py-1.5 px-3 rounded-md text-sm leading-5 space-x-2" data-action="click->activity-log#discardChanges">
+          Discard
+        </button>
+      </div>
+    </div>
+  </div>
+
+
   <div class="h-full grid grid-rows-[auto_minmax(0px,_1fr)] rounded-t-lg border-t border-l border-r border-gray-200 overflow-hidden pointer-events-auto bg-background dark:bg-secondaryBg w-full w-[318px] cursor-default z-20">
     <button class="flex items-center py-2 px-4 w-full text-left" name="Activity Feed" data-action="click->activity-log#toggleActivityLog">
       <div class="icon-container icon-md text-2xl text-pink-500" aria-hidden="true">

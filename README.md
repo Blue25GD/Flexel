@@ -4,7 +4,6 @@
 
 ### Requirements:
 - An ubuntu server with root access and curl installed.
-- (_optional_) A domain name with an SSL proxy (like Cloudflare) to forward traffic to the server.
 
 ### Instructions:
 

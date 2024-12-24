@@ -1,16 +1,6 @@
 <div data-controller="service-sidepanel">
-  <div class="z-20 fixed w-screen h-screen top-0 left-0 flex items-center justify-center" id="update-service-name-overlay" style="display: none">
-    <div class="w-full h-full bg-black/[.45] fixed top-0 left-0 z-20" data-action="click->service-sidepanel#closeUpdateServiceNameOverlay keydown@window->service-sidepanel#closeUpdateServiceNameOverlay"></div>
-    <div class="flex flex-col items-start justify-center z-20 w-[500px] gap-3">
-      <p class="text-sm font-medium bg-background rounded px-2 py-1 shadow-xl">Edit service name</p>
-      <input placeholder="Enter a new name" class="shadow-xl min-w-0 rounded-md
-     border border-gray-200 placeholder-gray-500 focus:outline-none
-      relative z-10 text-base leading-6 palette-input bg-background
-       dark:bg-secondaryBg rounded-t-lg h-full w-full px-6 py-4 !border-0
-        hover:border-transparent !focus:outline-none focus:border-transparent
-         text-current" style="height: 56px;" value="no-name-set" data-service-sidepanel-target="serviceNameInput" data-action="keydown->service-sidepanel#updateServiceName">
-    </div>
-  </div>
+  <%= render InputModalComponent.new(modal_id: "service-name") %>
+  <%= render InputModalComponent.new(modal_id: "connect-image", label: "Image name", placeholder: "Name of the image (e.g. kennethreitz/httpbin)") %>
 
   <div class="absolute right-0 bottom-0 top-6 h-[calc(100% - 68px)] z-10 w-[1000px] bg-white border rounded-tl-lg panel flex flex-col items-start justify-start cursor-default" id="service-sidepanel" style="display: none">
     <div class="flex flex-col pt-8 md:px-12 md:pt-12 z-50 border-b !border-gray-100 md:!border-gray-200 w-full">
@@ -57,7 +47,45 @@
         </a>
       </div>
     </div>
+    <div class="overflow-y-scroll w-full">
     <div class="grid gap-16 mx-6 sm:mx-12 mt-12 pb-40 sm:pb-12 border-l-none sm:border-l-2 border-black border-opacity-[8%] dark:border-white dark:border-opacity-[8%]">
+      <div class="relative">
+        <div id="source" class="absolute -top-24" aria-hidden="true"></div>
+        <div class="icon-container icon-40 text-2xl absolute !hidden sm:!flex top-[-6px] left-[-22px] bg-background dark:bg-secondaryBg border rounded-full p-[10px] text-gray-500 border-gray-200" size="40" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-code">
+            <path d="m16 18 6-6-6-6M8 6l-6 6 6 6"></path>
+          </svg>
+        </div>
+        <h1 class="text-h4 text-gray-600 font-medium mb-8 sm:pl-10">Source</h1>
+        <div class="grid gap-8 max-w-xl sm:pl-10">
+          <div class="" id="source-empty">
+            <header class="grid gap-1 mb-3">
+              <h2 class="focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-700 text-sm font-semibold cursor-pointer" as="h2" href="/project/354172ad-43ce-4061-a8e5-8a3d852e6fa4/service/ee0e9e5b-8d0a-45b4-8073-d50f6ab0fc22/settings?environmentId=4c5fe094-a06a-420b-a9d8-1c039634c9f6#source-empty">Connect
+                Source</h2>
+              <h2 class="text-sm text-gray-600">Connect your service to a GitHub repo or Docker image</h2></header>
+            <div class="flex gap-2">
+              <button class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 bg-transparent border-pink-200 text-pink-500 dark:text-pink-700 hover:bg-pink-100 hover:border-pink-200 disabled:bg-transparent disabled:border-pink-200 disabled:text-pink-700 focus-visible:ring-pink-600 focus-visible:bg-pink-100 h-[34px] py-1.5 px-3 rounded-md text-sm leading-5 space-x-2 max-w-max">
+                <div class="icon-container icon-md text-2xl !w-4 !h-4 text-pink-500" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 56 56" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M28 0C12.53 0 0 12.53 0 28c0 12.39 8.015 22.855 19.145 26.565 1.4.245 1.925-.595 1.925-1.33 0-.665-.035-2.87-.035-5.215-7.035 1.295-8.855-1.715-9.415-3.29-.315-.805-1.68-3.29-2.87-3.955-.98-.525-2.38-1.82-.035-1.855 2.205-.035 3.78 2.03 4.305 2.87 2.52 4.235 6.545 3.045 8.155 2.31.245-1.82.98-3.045 1.785-3.745-6.23-.7-12.74-3.115-12.74-13.825 0-3.045 1.085-5.565 2.87-7.525-.28-.7-1.26-3.57.28-7.42 0 0 2.345-.735 7.7 2.87 2.24-.63 4.62-.945 7-.945s4.76.315 7 .945c5.355-3.64 7.7-2.87 7.7-2.87 1.54 3.85.56 6.72.28 7.42 1.785 1.96 2.87 4.445 2.87 7.525 0 10.745-6.545 13.125-12.775 13.825 1.015.875 1.89 2.555 1.89 5.18 0 3.745-.035 6.755-.035 7.7 0 .735.525 1.61 1.925 1.33C47.985 50.855 56 40.355 56 28 56 12.53 43.47 0 28 0Z" fill="currentColor"></path>
+                  </svg>
+                </div>
+                <span class="inline-block">Connect Repo</span></button>
+              <button class="group/button flex items-center justify-center border transform transition-transform duration-50 active:scale-95 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 bg-transparent border-pink-200 text-pink-500 dark:text-pink-700 hover:bg-pink-100 hover:border-pink-200 disabled:bg-transparent disabled:border-pink-200 disabled:text-pink-700 focus-visible:ring-pink-600 focus-visible:bg-pink-100 h-[34px] py-1.5 px-3 rounded-md text-sm leading-5 space-x-2 max-w-max"
+              data-action="click->service-sidepanel#openConnectImageModal">
+                <div class="icon-container icon-md text-2xl !w-4 !h-4 text-pink-500" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"></path>
+                  </svg>
+                </div>
+                <span class="inline-block">Connect Image</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="relative">
         <div id="danger" class="absolute -top-24"></div>
         <div class="icon-container icon-40 text-2xl absolute !hidden sm:!flex top-[-6px] left-[-22px] bg-background dark:bg-secondaryBg border rounded-full p-[10px] text-red-500 border-red-200" size="40" aria-hidden="true">
@@ -88,6 +116,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
     <input type="hidden" id="service-id" value="no-service-id-was-set" data-action="input->service-sidepanel#serviceIdChange" disabled>
   </div>

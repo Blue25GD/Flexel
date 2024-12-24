@@ -25,6 +25,5 @@ module Flexel
     # config.eager_load_paths << Rails.root.join("extras")
     config.assets.paths << Rails.root.join("app", "assets", "other")
 
-    config.assume_ssl = true
   end
 end

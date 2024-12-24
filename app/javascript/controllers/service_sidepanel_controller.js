@@ -10,7 +10,6 @@ export default class extends Controller {
     observer = null
 
     input = document.getElementById('service-id');
-    updateServiceNameOverlay = document.getElementById('update-service-name-overlay');
 
     serviceId = null;
 
@@ -20,7 +19,7 @@ export default class extends Controller {
         block_bubbling_for_elements([elementToBlockBubbling]);
 
         this.observer = new MutationObserver(this.observeValueChange.bind(this));
-        this.observer.observe(this.input, {attributes: true, attributeFilter: ["value"]});
+        this.observer.observe(this.input, {attributes: true, attributeFilter: ["value"]})
 
         this.channel = consumer.subscriptions.create("ServiceSidepanelChannel", {
             connected() {
@@ -42,6 +41,8 @@ export default class extends Controller {
             }
         });
 
+        window.addEventListener("modal:service-name:submit", this.updateServiceName.bind(this));
+        window.addEventListener("modal:connect-image:submit", this.connectImageSubmission.bind(this));
     }
 
     serviceIdChange() {
@@ -63,30 +64,24 @@ export default class extends Controller {
         if (this.observer) {
             this.observer.disconnect();
         }
+
+        window.removeEventListener("modal:service-name:submit", this.updateServiceName.bind(this));
+        window.removeEventListener("modal:connect-image:submit", this.connectImageSubmission.bind(this));
     }
 
     openUpdateServiceNameOverlay() {
-        this.updateServiceNameOverlay.style.display = 'flex';
-        this.serviceNameInputTarget.value = this.serviceNameTarget.innerHTML;
-    }
-
-    closeUpdateServiceNameOverlay(event, force = false) {
-        event.stopPropagation();
-        // event.preventDefault();
-        if (event instanceof KeyboardEvent && event.key !== "Escape" && !force) {
-            return;
-        }
-
-        this.updateServiceNameOverlay.style.display = 'none';
+        const event = new CustomEvent("modal:service-name:open", {
+            bubbles: true,
+        });
+        window.dispatchEvent(event);
     }
 
     updateServiceName(event) {
-        if (event instanceof KeyboardEvent && event.key !== "Enter") {
-            return;
-        }
-        const newName = event.target.value;
+        console.log(event);
+        const newName = event.detail.value;
+        console.log(newName);
         this.channel.perform('update_service_name', {service_id: this.serviceId, name: newName});
-        this.closeUpdateServiceNameOverlay(event, true);
+        console.log('update');
     }
 
     observeValueChange(mutationsList) {
@@ -96,5 +91,17 @@ export default class extends Controller {
                 this.serviceIdChange();
             }
         }
+    }
+
+    openConnectImageModal() {
+        const event = new CustomEvent("modal:connect-image:open", {
+            bubbles: true,
+        });
+        window.dispatchEvent(event);
+    }
+
+    connectImageSubmission(event) {
+        const imageName = event.detail.value;
+        this.channel.perform('connect_image', {service_id: this.serviceId, image_name: imageName});
     }
 }

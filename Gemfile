@@ -74,3 +74,5 @@ gem "view_component"
 group :development do
   gem "lookbook", ">= 2.3.4"
 end
+
+gem 'paper_trail'

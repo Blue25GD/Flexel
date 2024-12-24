@@ -9,7 +9,11 @@ class ServicesChannel < ApplicationCable::Channel
   end
 
   def request_services(data)
-    services = Service.where(project_id: params[:project_id])
+    ServicesChannel.broadcast_services(data["project_id"], current_user)
+  end
+
+  def self.broadcast_services(project_id, user)
+    services = Service.where(project_id: project_id)
 
     services = services.map do |service|
       {
@@ -19,7 +23,7 @@ class ServicesChannel < ApplicationCable::Channel
     end
 
     ServicesChannel.broadcast_to(
-      current_user,
+      user,
       data: {
         type: "services",
         values: services

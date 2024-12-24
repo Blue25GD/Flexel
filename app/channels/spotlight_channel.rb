@@ -84,22 +84,7 @@ class SpotlightChannel < ApplicationCable::Channel
 
       service = Service.create!(name: Project.generate_project_name, project: project)
       # broadcast the new service
-      services = Service.where(project_id: data["project_id"])
-
-      services = services.map do |service|
-        {
-          id: service.id,
-          name: service.name
-        }
-      end
-
-      ServicesChannel.broadcast_to(
-        current_user,
-        data: {
-          type: "services",
-          values: services
-        }
-      )
+      ServicesChannel.broadcast_services(data["project_id"], current_user)
 
       ActivityLogChannel.broadcast_to(
         current_user,
@@ -108,6 +93,16 @@ class SpotlightChannel < ApplicationCable::Channel
           values: {
             type: "success",
             message: "Service #{service.name} created"
+          }
+        }
+      )
+
+      ActivityLogChannel.broadcast_to(
+        current_user,
+        data: {
+          type: "changes",
+          values: {
+            can_deploy: true
           }
         }
       )

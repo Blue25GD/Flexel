@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_23_140944) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_24_155215) do
   create_table "projects", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
@@ -20,10 +20,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_140944) do
   end
 
   create_table "services", force: :cascade do |t|
-    t.string "name"
-    t.bigint "project_id", null: false
+    t.string "name", null: false
+    t.integer "project_id", null: false
+    t.string "source_type"
+    t.string "source_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "deployed_version"
     t.index ["project_id"], name: "index_services_on_project_id"
   end
 
@@ -48,7 +51,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_140944) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.bigint "whodunnit"
+    t.datetime "created_at"
+    t.bigint "item_id", null: false
+    t.string "item_type", null: false
+    t.string "event", null: false
+    t.text "object", limit: 1073741823
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   add_foreign_key "projects", "users"
   add_foreign_key "services", "projects"
+  add_foreign_key "services", "versions", column: "deployed_version"
   add_foreign_key "spotlight_documents", "spotlight_documents", column: "parent_id"
 end

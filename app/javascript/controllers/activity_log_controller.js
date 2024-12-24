@@ -4,7 +4,7 @@ import consumer from "channels/consumer"
 
 // Connects to data-controller="activity-log"
 export default class extends Controller {
-    static targets = ["content", "toasts", "neutralToastTemplate", "successToastTemplate", "errorToastTemplate"]
+    static targets = ["content", "toasts", "neutralToastTemplate", "successToastTemplate", "errorToastTemplate", "applyChangesBanner"]
 
     isOpen = false
 
@@ -16,8 +16,13 @@ export default class extends Controller {
         block_bubbling_for_elements(elementsToBlockBubbling);
 
         this.channel = consumer.subscriptions.create("ActivityLogChannel", {
-            connected() {
-                // Called when the subscription is ready for use on the server
+            connected: () => {
+                const url = window.location.pathname;
+                const projectId = url.split("/")[2];
+
+                this.channel.perform("can_deploy", {
+                    project_id: projectId
+                });
             },
 
             disconnected() {
@@ -32,6 +37,12 @@ export default class extends Controller {
                     case "toast":
                         this.addToast(values["message"], values["type"]);
                         break;
+                    case "changes":
+                        if (values["can_deploy"]) {
+                            this.applyChangesBannerTarget.style.display = 'block';
+                        } else {
+                            this.applyChangesBannerTarget.style.display = 'none';
+                        }
                 }
             }
         });
@@ -64,6 +75,16 @@ export default class extends Controller {
         setTimeout(() => {
             clone.remove()
         }, 5000)
+    }
+
+    discardChanges(event) {
+        event.preventDefault()
+        const url = window.location.pathname;
+        const projectId = url.split("/")[2];
+
+        this.channel.perform("discard_changes", {
+            project_id: projectId
+        });
     }
 
     addNeutralToast(message) {
