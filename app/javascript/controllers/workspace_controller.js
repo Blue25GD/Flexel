@@ -45,9 +45,6 @@ export default class extends Controller {
                 const values = data.values
                 switch (data.type) {
                     case "services":
-                        if (values.length === 0) {
-                            return
-                        }
                         // get rid of the "add service" button
                         document.getElementsByClassName("add-service")[0].style.display = "none"
                         document.getElementsByClassName("add-service")[0].id = ""
@@ -59,6 +56,12 @@ export default class extends Controller {
                                 continue
                             }
                             services[i].remove()
+                        }
+
+                        if (values.length === 0) {
+                            // show the "add service" button
+                            document.getElementsByClassName("add-service")[0].style.display = "block"
+                            return
                         }
 
                         const template = document.getElementById("service-template");
@@ -76,6 +79,12 @@ export default class extends Controller {
 
                             // Add spacing between the services
                             clone.style.margin = "10px";  // Adjust margin as needed
+
+                            clone.addEventListener("click", (event) => {
+                                event.preventDefault();
+                                document.getElementById("service-sidepanel").style.display = "flex";
+                                document.querySelector("#service-id").value = service.id;
+                            })
 
                             if (i === centerService) {
                                 clone.id = "center-point";
