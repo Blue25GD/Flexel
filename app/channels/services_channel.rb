@@ -8,11 +8,12 @@ class ServicesChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def request_services(data)
-    ServicesChannel.broadcast_services(data["project_id"], current_user)
+  def request_services
+    ServicesChannel.broadcast_services(params["project_id"], current_user)
   end
 
   def self.broadcast_services(project_id, user)
+    project_id = project_id.to_i
     services = Service.where(project_id: project_id)
 
     services = services.map do |service|

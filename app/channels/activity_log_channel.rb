@@ -22,10 +22,12 @@ class ActivityLogChannel < ApplicationCable::Channel
     services.each do |service|
       last_version = service.versions.last
 
-      if last_version && last_version.id != service.deployed_version
+      # x - 1 since updating the last deployed version increments the versions by 1
+      if last_version && (last_version.id - 1 != service.deployed_version) && last_version.id != service.deployed_version
         result = true
         break
       end
+
     end
 
     ActivityLogChannel.broadcast_to(
@@ -55,10 +57,42 @@ class ActivityLogChannel < ApplicationCable::Channel
         next
       end
 
-      service = service.versions.find(service.deployed_version).reify(options = {})
-      service.save
+      # restore the service to the last deployed version
+      version = PaperTrail::Version.find(service.deployed_version + 1).reify
+      service.name = version.name
+      service.source_type = version.source_type
+      service.source_url = version.source_url
+      service.save!
 
       service.versions.where("id > ?", service.deployed_version).destroy_all
+    end
+
+    ActivityLogChannel.broadcast_to(
+      current_user,
+      data: {
+        type: "changes",
+        values: {
+          can_deploy: false
+        }
+      }
+    )
+
+    ServicesChannel.broadcast_services(project.id, current_user)
+  end
+
+  def deploy_changes(params)
+    project = Project.find(params["project_id"])
+
+    if project.user != current_user
+      return
+    end
+
+    services = Service.where(project_id: project.id)
+
+    services.each do |service|
+      last_version = service.versions.last
+      service.deployed_version = last_version.id
+      service.save!
     end
 
     ActivityLogChannel.broadcast_to(

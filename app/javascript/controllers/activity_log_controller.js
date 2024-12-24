@@ -87,6 +87,16 @@ export default class extends Controller {
         });
     }
 
+    deployChanges(event) {
+        event.preventDefault()
+        const url = window.location.pathname;
+        const projectId = url.split("/")[2];
+
+        this.channel.perform("deploy_changes", {
+            project_id: projectId
+        });
+    }
+
     addNeutralToast(message) {
         this.addToast(message, 'neutral')
     }
