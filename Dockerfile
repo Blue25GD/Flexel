@@ -14,9 +14,9 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
-# Install base packages
+# Install base packages including OpenSSL for SSL certificate generation
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 openssl && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -57,6 +57,12 @@ FROM base
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
+# Generate a self-signed SSL certificate that expires in 10 years (3650 days)
+RUN mkdir -p /etc/ssl/certs && \
+    mkdir -p /etc/ssl/private && \
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/private/selfsigned.key -out /etc/ssl/certs/selfsigned.crt \
+    -subj "/C=XX/ST=State/L=City/O=Flexel/OU=IT/CN=localhost"
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
@@ -67,6 +73,9 @@ USER 1000:1000
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+# Configure the Rails server to use SSL
+# Expose ports for both HTTP and HTTPS
+EXPOSE 3000
+
+# Set up the SSL certificate and key environment variables for Rails
+CMD ["./bin/thrust", "./bin/rails", "server", "-b", "ssl://0.0.0.0:3000?key=/etc/ssl/private/selfsigned.key&cert=/etc/ssl/certs/selfsigned.crt"]
