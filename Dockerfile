@@ -50,6 +50,9 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 RUN bin/rails credentials:edit
 
+RUN bin/rails db:migrate
+RUN bin/rails db:seed
+
 # Final stage for app image
 FROM base
 
@@ -58,15 +61,14 @@ COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
 # Generate a self-signed SSL certificate that expires in 10 years (3650 days)
-RUN mkdir -p /etc/ssl/certs && \
-    mkdir -p /etc/ssl/private && \
-    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/private/selfsigned.key -out /etc/ssl/certs/selfsigned.crt \
+RUN mkdir -p ./ssl && \
+    openssl req -x509 -nodes -days 30 -newkey rsa:2048 -keyout ./ssl/selfsigned.key -out ./ssl/selfsigned.crt \
     -subj "/C=XX/ST=State/L=City/O=Flexel/OU=IT/CN=localhost"
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp config
+    chown -R rails:rails db log storage tmp config ssl
 
 USER 1000:1000
 
@@ -78,4 +80,5 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 
 # Set up the SSL certificate and key environment variables for Rails
-CMD ["./bin/thrust", "./bin/rails", "server", "-b", "ssl://0.0.0.0:3000?key=/etc/ssl/private/selfsigned.key&cert=/etc/ssl/certs/selfsigned.crt"]
+CMD ["./bin/thrust", "./bin/rails", "server", "-b", "ssl://0.0.0.0:3000?key=./ssl/selfsigned.key&cert=./ssl/selfsigned.crt"]
+#CMD ["./bin/thrust", "./bin/rails", "server", "-b", "http://0.0.0.0:3000"]
