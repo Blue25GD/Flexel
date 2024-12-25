@@ -1,5 +1,5 @@
 class Service < ApplicationRecord
-  has_paper_trail
+  has_paper_trail ignore: [:deployed_version]
 
   belongs_to :project
 

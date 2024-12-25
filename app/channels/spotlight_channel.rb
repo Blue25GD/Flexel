@@ -83,6 +83,7 @@ class SpotlightChannel < ApplicationCable::Channel
       )
 
       service = Service.create!(name: Project.generate_project_name, project: project)
+      service.paper_trail.save_with_version
       # broadcast the new service
       ServicesChannel.broadcast_services(data["project_id"], current_user)
 

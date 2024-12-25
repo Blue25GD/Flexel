@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_24_155215) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_24_193144) do
+  create_table "deployments", force: :cascade do |t|
+    t.integer "service_id", null: false
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_id"], name: "index_deployments_on_service_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
@@ -61,6 +69,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_155215) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "deployments", "services"
   add_foreign_key "projects", "users"
   add_foreign_key "services", "projects"
   add_foreign_key "services", "versions", column: "deployed_version"

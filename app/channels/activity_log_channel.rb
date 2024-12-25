@@ -23,7 +23,7 @@ class ActivityLogChannel < ApplicationCable::Channel
       last_version = service.versions.last
 
       # x - 1 since updating the last deployed version increments the versions by 1
-      if last_version && (last_version.id - 1 != service.deployed_version) && last_version.id != service.deployed_version
+      if last_version && last_version.id != service.deployed_version
         result = true
         break
       end
@@ -58,7 +58,13 @@ class ActivityLogChannel < ApplicationCable::Channel
       end
 
       # restore the service to the last deployed version
-      version = PaperTrail::Version.find(service.deployed_version + 1).reify
+      version = PaperTrail::Version.find(service.deployed_version).reify
+
+      if version.nil?
+        service.destroy
+        next
+      end
+
       service.name = version.name
       service.source_type = version.source_type
       service.source_url = version.source_url
